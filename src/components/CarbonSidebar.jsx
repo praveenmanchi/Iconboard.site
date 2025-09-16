@@ -120,7 +120,7 @@ const CarbonSidebar = ({ selectedCategory, onCategorySelect, categories }) => {
           Please feel free to contribute to the project.
         </p>
         <a 
-          href="https://github.com/praveenmanchi/tesrrf-icon-sep-14" 
+          href="https://github.com/praveenmanchi/Iconboard.site" 
           target="_blank" 
           rel="noopener noreferrer"
           className={`mt-2 inline-block text-xs font-medium ${
