@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { usePostHog } from 'posthog-js/react';
+import { Analytics } from "@vercel/analytics/react";
 import CarbonHeader from "./components/CarbonHeader";
 import ErrorBoundary from "./components/ErrorBoundary";
 import EnhancedErrorBoundary from "./components/EnhancedErrorBoundary";
@@ -430,6 +431,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        <Analytics />
       </div>
     </ThemeProvider>
   );
