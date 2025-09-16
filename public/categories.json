@@ -1,0 +1,77 @@
+[
+  {
+    "id": "all",
+    "name": "All Icons",
+    "count": 13160
+  },
+  {
+    "id": "all brands",
+    "name": "All brands",
+    "count": 3329
+  },
+  {
+    "id": "arrows",
+    "name": "Arrows",
+    "count": 2
+  },
+  {
+    "id": "brands & companies",
+    "name": "Brands & companies",
+    "count": 69
+  },
+  {
+    "id": "business",
+    "name": "Business",
+    "count": 2
+  },
+  {
+    "id": "dev",
+    "name": "Dev",
+    "count": 843
+  },
+  {
+    "id": "feather",
+    "name": "Feather",
+    "count": 287
+  },
+  {
+    "id": "finance",
+    "name": "Finance",
+    "count": 2
+  },
+  {
+    "id": "interface",
+    "name": "Interface",
+    "count": 2
+  },
+  {
+    "id": "material",
+    "name": "Material",
+    "count": 7447
+  },
+  {
+    "id": "microsoft",
+    "name": "Microsoft",
+    "count": 492
+  },
+  {
+    "id": "radix",
+    "name": "Radix",
+    "count": 333
+  },
+  {
+    "id": "social",
+    "name": "Social",
+    "count": 2
+  },
+  {
+    "id": "technology",
+    "name": "Technology",
+    "count": 131
+  },
+  {
+    "id": "weather",
+    "name": "Weather",
+    "count": 219
+  }
+]

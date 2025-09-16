@@ -1,0 +1,48 @@
+modules = ["nodejs-20", "bash", "web", "python-3.11"]
+[agent]
+expertMode = true
+integrations = ["javascript_supabase:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "React Server"
+
+[[workflows.workflow]]
+name = "React Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3000
+
+[[ports]]
+localPort = 37067
+externalPort = 3001
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["serve", "-s", "frontend/build", "-p", "5000"]
+build = ["node", "scripts/generate-icons-data.js", "&&", "cd", "frontend", "&&", "npm", "run", "build"]
