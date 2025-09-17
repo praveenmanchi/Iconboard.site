@@ -171,3 +171,11 @@ code {
 .hover\:scale-110:hover {
   transform: scale(1.1);
 }
+
+/* CSS Grid responsive layout for IconBoard */
+.auto-fill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  width: 100%;
+}

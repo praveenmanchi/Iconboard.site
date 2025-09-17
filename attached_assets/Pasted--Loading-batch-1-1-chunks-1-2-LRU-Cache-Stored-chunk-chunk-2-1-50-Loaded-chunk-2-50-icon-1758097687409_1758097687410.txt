@@ -1,0 +1,35 @@
+📦 Loading batch 1/1: chunks 1-2
+💾 LRU Cache: Stored chunk chunk-2 (1/50)
+✅ Loaded chunk 2: 50 icons
+💾 LRU Cache: Stored chunk chunk-1 (2/50)
+✅ Loaded chunk 1: 50 icons
+✅ ChunkedIconAPI: Loaded 100 icons in 828ms from 2 chunks
+🎯 Custom Metric [icon_load_time]: 
+Object {value: 827.6000000238419, category: "all", result_count: 100, load_type: "initial"}
+<div class="luna-console-preview" data-id="44"><div class="luna-console-preview-container"><div class="luna-console-preview-icon-container"><span class="luna-console-icon luna-console-icon-caret-right"></span></div><span class="luna-console-preview-content-container"><span class="luna-console-descriptor">TypeError</span> <span class="luna-console-object-preview">{}</span></span></div><div class="luna-console-json luna-console-hidden"></div></div>
+
+The above error occurred in the <Se> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, EnhancedErrorBoundary.
+
+
+The above error occurred in the &lt;Se&gt; component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, EnhancedErrorBoundary.
+
+at t.value (https://c4a55508-845d-4401-883a-e842c8bc32bf-00-2039u8gcom26o.worf.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://c4a55508-845d-4401-883a-e842c8bc32bf-00-2039u8gcom26o.worf.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://c4a55508-845d-4401-883a-e842c8bc32bf-00-2039u8gcom26o.worf.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://c4a55508-845d-4401-883a-e842c8bc32bf-00-2039u8gcom26o.worf.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Error in CarbonIconGrid: 
+TypeError {}
+
+Error Info: 
+Object {componentStack: "↵    at Se…"}
+
+✅ Loaded chunk 2: 50 icons
+✅ Loaded chunk 1: 50 icons
+✅ ChunkedIconAPI: Loaded 100 icons in 1113ms from 2 chunks
+🐌 Slow chunked loading: 1113ms for 100 icons
+🎯 Custom Metric [icon_load_time]: 
+Object {value: 1113.199999988079, category: "all", result_count: 100, load_type: "initial"}

@@ -1,4 +1,5 @@
 // Removed axios dependency - using fetch() instead
+import LRUCache from '../utils/LRUCache';
 
 // Detect if we're in local development or deployed
 const isLocalDevelopment = process.env.NODE_ENV === 'development' && 
@@ -22,15 +23,62 @@ const apiClient = {
   }
 };
 
-// Chunked data loading class with search indexing
+// Chunked data loading class with search indexing and LRU memory management
 class ChunkedIconAPI {
   constructor() {
     this.chunksIndex = null;
-    this.loadedChunks = new Map();
+    this.loadedChunks = new LRUCache(50); // Limit to 50 chunks in memory (~2500 icons max)
     this.categoryChunks = null;
     this.searchIndex = new Map(); // Fast search index: term -> icon IDs
     this.iconMetadata = new Map(); // icon ID -> metadata for quick lookup
+    this.iconToChunk = new Map(); // FAST LOOKUP: icon ID -> chunk number for instant access
     this.isIndexed = false;
+    this.isPrecomputedMappingLoaded = false;
+  }
+
+  // Build precomputed icon-to-chunk mapping for instant lookups
+  async buildPrecomputedIconMapping() {
+    if (this.isPrecomputedMappingLoaded) return;
+    
+    console.log('🏗️ Building precomputed icon-to-chunk mapping for instant lookups...');
+    const startTime = Date.now();
+    
+    await this.loadChunksIndex();
+    
+    // Build mapping by loading just the first icon from each chunk to determine chunk boundaries
+    const samplingPromises = [];
+    const BATCH_SIZE = 20; // Load chunks in parallel batches
+    
+    for (let i = 0; i < this.chunksIndex.total_chunks; i += BATCH_SIZE) {
+      const batchEnd = Math.min(i + BATCH_SIZE, this.chunksIndex.total_chunks);
+      const batchPromise = Promise.all(
+        Array.from({length: batchEnd - i}, (_, idx) => this.sampleChunkForMapping(i + idx + 1))
+      );
+      samplingPromises.push(batchPromise);
+    }
+    
+    // Execute all batches in parallel
+    await Promise.all(samplingPromises);
+    
+    const endTime = Date.now();
+    console.log(`✅ Precomputed mapping built: ${this.iconToChunk.size} icons mapped in ${endTime - startTime}ms`);
+    this.isPrecomputedMappingLoaded = true;
+  }
+  
+  // Sample a chunk to add its icons to the precomputed mapping
+  async sampleChunkForMapping(chunkNumber) {
+    try {
+      const response = await fetch(`${STATIC_BASE}/chunks/icons-${chunkNumber}.json`);
+      const icons = await response.json();
+      
+      // Add all icons from this chunk to the mapping (but don't cache the full chunk)
+      icons.forEach(icon => {
+        this.iconToChunk.set(icon.id, chunkNumber);
+      });
+      
+    } catch (error) {
+      console.warn(`Warning: Could not sample chunk ${chunkNumber} for mapping:`, error);
+    }
   }
 
   async loadChunksIndex() {
@@ -96,17 +144,18 @@ class ChunkedIconAPI {
   }
 
   async loadChunk(chunkNumber) {
-    if (this.loadedChunks.has(chunkNumber)) {
-      return this.loadedChunks.get(chunkNumber);
+    const cacheKey = `chunk-${chunkNumber}`;
+    if (this.loadedChunks.has(cacheKey)) {
+      return this.loadedChunks.get(cacheKey);
     }
 
     try {
       const response = await fetch(`${STATIC_BASE}/chunks/icons-${chunkNumber}.json`);
       const chunk = await response.json();
-      this.loadedChunks.set(chunkNumber, chunk);
+      this.loadedChunks.set(cacheKey, chunk); // Store with LRU eviction
       
-      // Index icons for search as they're loaded
-      this.indexIconsFromChunk(chunk);
+      // Index icons for search as they're loaded (with chunk number for fast lookup)
+      this.indexIconsFromChunk(chunk, chunkNumber);
       
       console.log(`✅ Loaded chunk ${chunkNumber}: ${chunk.length} icons`);
       return chunk;
@@ -117,7 +166,7 @@ class ChunkedIconAPI {
   }
 
   // Build search index from loaded icons
-  indexIconsFromChunk(icons) {
+  indexIconsFromChunk(icons, chunkNumber) {
     icons.forEach(icon => {
       // Store icon metadata
       this.iconMetadata.set(icon.id, {
@@ -127,6 +176,9 @@ class ChunkedIconAPI {
         tags: icon.tags || [],
         filename: icon.filename
       });
+      
+      // FAST LOOKUP: Store icon -> chunk mapping for instant access
+      this.iconToChunk.set(icon.id, chunkNumber);
 
       // Create searchable terms
       const searchTerms = [
@@ -160,7 +212,7 @@ class ChunkedIconAPI {
     });
   }
 
-  // Fast search using pre-built index
+  // Fast search using pre-built index with improved completeness
   async searchIcons(searchTerm, limit = 200) {
     if (!searchTerm || searchTerm.length < 2) {
       return [];
@@ -194,20 +246,58 @@ class ChunkedIconAPI {
 
     console.log(`🔍 Search index found ${metadataResults.length} results for "${query}" in ${this.searchIndex.size} indexed terms`);
     
-    // Now fetch full icon data with SVG content from loaded chunks
+    // IMPROVED: Batch load required chunks to avoid missing icons
+    const requiredChunks = new Set();
+    metadataResults.forEach(metadata => {
+      const chunkNumber = this.iconToChunk.get(metadata.id);
+      if (chunkNumber) {
+        requiredChunks.add(chunkNumber);
+      }
+    });
+    
+    // Pre-load all required chunks in parallel (with concurrency limiting for production safety)
+    if (requiredChunks.size > 0) {
+      console.log(`📦 Pre-loading ${requiredChunks.size} chunks for search completeness`);
+      
+      // Load chunks in batches to prevent network overload and LRU thrash
+      const chunks = Array.from(requiredChunks);
+      const BATCH_SIZE = 12; // Architect recommended 10-15 for safety
+      
+      for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+        const batchEnd = Math.min(i + BATCH_SIZE, chunks.length);
+        const batch = chunks.slice(i, batchEnd);
+        await Promise.all(batch.map(chunkNum => this.loadChunk(chunkNum)));
+      }
+    }
+    
+    // Now fetch full icon data - should have high success rate
     const fullResults = [];
     for (const metadata of metadataResults) {
       const fullIcon = await this.getFullIconData(metadata.id);
       if (fullIcon) {
         fullResults.push(fullIcon);
+      } else {
+        console.warn(`🚨 Search completeness issue: Could not load icon ${metadata.id}`);
       }
     }
     
+    console.log(`✅ Search returned ${fullResults.length}/${metadataResults.length} icons (${fullResults.length === metadataResults.length ? 'complete' : 'incomplete'})`);
     return fullResults;
   }
 
   // Helper method to get full icon data including SVG content
   async getFullIconData(iconId) {
+    // FAST LOOKUP: Use chunk mapping for instant access
+    const chunkNumber = this.iconToChunk.get(iconId);
+    if (chunkNumber) {
+      const chunk = await this.loadChunk(chunkNumber);
+      const icon = chunk.find(icon => icon.id === iconId);
+      if (!icon) {
+        console.warn(`🚨 Icon ${iconId} missing from chunk ${chunkNumber}!`);
+      }
+      return icon;
+    }
+    
     // Check if we already have the full data in loaded chunks
     for (const [chunkNum, chunkData] of this.loadedChunks.entries()) {
       const icon = chunkData.find(icon => icon.id === iconId);
@@ -216,8 +306,8 @@ class ChunkedIconAPI {
       }
     }
     
-    // If not found in loaded chunks, we need to find and load the correct chunk
-    // For now, return the metadata - this should be improved with chunk mapping
+    // If no chunk mapping available, this indicates a search index inconsistency
+    console.warn(`⚠️ Missing chunk mapping for icon ${iconId} - search index may be stale`);
     return this.iconMetadata.get(iconId);
   }
 
@@ -328,6 +418,14 @@ class ChunkedIconAPI {
 
   async getIcon(iconId) {
     try {
+      // FAST LOOKUP: Check if we know which chunk contains this icon
+      const chunkNumber = this.iconToChunk.get(iconId);
+      if (chunkNumber) {
+        console.log(`🎯 Fast lookup: Icon ${iconId} is in chunk ${chunkNumber}`);
+        const chunk = await this.loadChunk(chunkNumber);
+        return chunk.find(icon => icon.id === iconId);
+      }
+      
       // Try to find in already loaded chunks first
       for (const chunk of this.loadedChunks.values()) {
         const icon = chunk.find(icon => icon.id === iconId);
@@ -336,19 +434,22 @@ class ChunkedIconAPI {
         }
       }
       
-      // If not found in loaded chunks, we'll need to search through chunks
-      // For now, load first few chunks and search
+      // If no fast mapping available, incrementally search chunks
+      // This builds the mapping as we go for future fast lookups
       await this.loadChunksIndex();
       
-      for (let i = 1; i <= Math.min(10, this.chunksIndex.total_chunks); i++) {
+      console.log(`🔍 Searching for icon ${iconId} across ${this.chunksIndex.total_chunks} chunks...`);
+      
+      for (let i = 1; i <= this.chunksIndex.total_chunks; i++) {
         const chunk = await this.loadChunk(i);
         const icon = chunk.find(icon => icon.id === iconId);
         if (icon) {
+          console.log(`✅ Found icon ${iconId} in chunk ${i}`);
           return icon;
         }
       }
       
-      throw new Error('Icon not found');
+      throw new Error(`Icon '${iconId}' not found in any of ${this.chunksIndex.total_chunks} chunks`);
     } catch (error) {
       console.error('Error fetching icon:', error);
       throw error;

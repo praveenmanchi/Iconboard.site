@@ -137,11 +137,11 @@ const Home = () => {
       try {
         setLoading(true);
         // Don't clear icons immediately - keep showing current icons while loading
-        setCurrentLimit(100); // Reset limit
+        setCurrentLimit(150); // Reset limit for 2 more rows
         setHasMore(true); // Reset hasMore flag
         
         const params = {
-          limit: 100 // Optimized initial load for better performance
+          limit: 150 // Increased initial load for 2 more rows of icons
         };
         
         if (selectedCategory !== 'all') {
@@ -173,7 +173,7 @@ const Home = () => {
         }
         
         // Check if we have fewer icons than the limit, meaning no more to load
-        if (iconsData.length < 100) {
+        if (iconsData.length < 150) {
           setHasMore(false);
         }
       } catch (err) {
