@@ -47,27 +47,23 @@
         <meta name="pinterest-rich-pin" content="true" />
         
         <!-- Enhanced Favicon Package -->
-        <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="16x16" />
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="32x32" />
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192" />
-        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="57x57" href="/favicon-96x96.png" />
-        <link rel="apple-touch-icon" sizes="60x60" href="/favicon-96x96.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="msapplication-TileColor" content="#000000" />
-        <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
         
         <!-- Security Headers -->
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://app.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://app.posthog.com;" />
@@ -368,48 +364,83 @@
         </main>
         
         <!-- Creator Badge with improved accessibility -->
-        <aside aria-label="Creator information">
-            <a
-                id="praveen-badge"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://www.linkedin.com/in/praveenmanchi/"
-                aria-label="Made by Praveen Manchi - Visit LinkedIn profile (opens in new tab)"
-                style="
-                    display: flex !important;
-                    align-items: center !important;
-                    position: fixed !important;
-                    bottom: 20px;
-                    right: 20px;
-                    text-decoration: none;
-                    padding: 8px 12px;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
-                    font-size: 12px !important;
-                    font-weight: 500 !important;
-                    z-index: 9999 !important;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-                    border-radius: 8px !important;
-                    background-color: #ffffff !important;
-                    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-                    transition: all 0.2s ease !important;
-                    color: #000000 !important;
-                "
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.2)'"
-                onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.15)'"
-            >
-                <div style="display: flex; flex-direction: row; align-items: center">
-                    <img
-                        style="width: 20px; height: 20px; margin-right: 8px; border-radius: 50%"
-                        src="https://ui-avatars.com/api/?name=Praveen+Manchi&background=0ea5e9&color=ffffff&size=40&bold=true"
-                        alt="Praveen Manchi profile picture"
-                        loading="lazy"
-                        width="20"
-                        height="20"
-                    />
-                    <span style="margin: 0; color: inherit;">Made by Praveen Manchi</span>
-                </div>
-            </a>
-        </aside>
+        <!-- Accessible, styled badge for author (drop-in snippet)
+     Replace href and image src as needed. No inline styles or event handlers.
+-->
+<aside aria-label="Creator information" class="badge-outer">
+  <a
+    id="praveen-badge"
+    class="badge-link"
+    href="https://www.linkedin.com/in/praveenmanchi/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Made by Praveen Manchi — Visit LinkedIn profile (opens in new tab)"
+  >
+    <img
+      class="badge-avatar"
+      src="./badage.png"
+      alt="Praveen Manchi profile picture"
+      loading="lazy"
+      width="36"
+      height="36"
+    />
+
+    <div class="badge-text-wrap">
+      <span class="badge-line-1"; style="font-size:8px;font-weight:400;color:var(--badge-fg)">Made by</span>
+      <span class="badge-line-2"; style="font-size:12px;font-weight:600;color:var(--badge-fg);margin-top:0">Praveen Manchi</span>
+    </div>
+
+    <span class="sr-only">Opens LinkedIn profile in a new tab</span>
+  </a>
+</aside>
+
+<style>
+  :root{
+    --badge-bg: #ffffff;
+    --badge-fg: #0a0a0a;
+    --badge-border: rgba(0,0,0,0.08);
+    --badge-shadow: 0 6px 18px rgba(2,6,23,0.12);
+    --badge-radius: 10px;
+  }
+
+  .badge-outer{position:fixed;right:20px;bottom:20px;z-index:9999}
+
+  .badge-link{
+    display:flex;align-items:center;gap:10px;text-decoration:none;padding:8px 12px;border-radius:var(--badge-radius);
+    background:var(--badge-bg);color:var(--badge-fg);box-shadow:var(--badge-shadow);border:1px solid var(--badge-border);
+    transform:translateY(0);transition:transform .18s ease, box-shadow .18s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size:13px;font-weight:500;line-height:1;display:flex;align-items:center;
+  }
+
+  .badge-link:focus{outline:3px solid rgba(14,165,233,0.18);outline-offset:3px}
+  .badge-link:hover,.badge-link:focus{transform:translateY(-3px);box-shadow:0 12px 30px rgba(2,6,23,0.16)}
+
+  .badge-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:block}
+
+  .badge-text-wrap{display:flex;flex-direction:column;min-width:0}
+  .badge-line-1{font-size:11px;font-weight:600;letter-spacing:0.2px;color:var(--badge-fg)}
+  .badge-line-2{font-size:13px;margin-top:0;color:var(--badge-fg)}
+
+  /* Responsive adjustments */
+  @media (max-width:420px){
+    .badge-outer{right:12px;bottom:12px}
+    .badge-link{padding:6px 8px}
+    .badge-avatar{width:28px;height:28px}
+    .badge-line-1{font-size:10px}
+    .badge-line-2{font-size:11px}
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion:reduce){
+    .badge-link{transition:none}
+    .badge-link:hover,.badge-link:focus{transform:none;box-shadow:var(--badge-shadow)}
+  }
+
+  /* Utility: visually-hidden for screen readers */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+
         
         <!-- Hidden structured data for icons -->
         <script type="application/ld+json">
